@@ -1,0 +1,113 @@
+#!/usr/bin/zsh
+
+# make things shorer
+alias l="ls -lh"
+alias la="ls -lah"
+alias s=sudo
+alias pls='sudo $(fc -nl -1)'
+alias wi="nmtui-connect"
+alias n=ncmpcpp
+alias r=ranger
+alias t=task
+alias serve="python2 -m SimpleHTTPServer 8080"
+alias dog="pygmentize -g"
+alias stderred="LD_PRELOAD=/usr/lib/libstderred.so\${LD_PRELOAD:+:\$LD_PRELOAD}"
+alias reload-aliases=". ~/.zsh_aliases"
+alias ec=emacsclient -t
+alias t="transmission-remote-cli"
+alias p="pacaur"
+alias conf="git  --work-tree=$HOME --git-dir=$HOME/.conf"
+
+# make things better
+alias less='less -R'
+alias pacman="sudo pacman --color always"
+alias pacaur="pacaur --color always"
+alias you-audio="youtube-dl -f bestaudio"
+alias wget="\wget -c"
+alias dl="curl -L -O -C -"
+alias gradle="gradle --console rich"
+alias die="poweroff"
+alias mirrors="sudo reflector --verbose --latest 5 --sort rate --save /etc/pacman.d/mirrorlist"
+
+# things that manage terminals
+alias at="abduco -A"
+alias atc="abduco -a \$(abduco | tail -n +2 | cut -d ' ' -d $'\t' -f 3 | fzf)"
+
+# things that always run
+alias weechat="abduco -A weechat weechat"
+alias rt="abduco -A rtorrent rtorrent"
+
+# mail things
+alias check-mail="pkill --signal SIGUSR1 offlineimap"
+alias m="mail -A \$(echo \"ellisadigvom\nwasp\nrpgrenade\nabanga\" | fzf)"
+
+# do things quick
+function mkcd () { mkdir -p "$@" && cd "$@"; }
+alias clone="git clone \$(xclip -o)"
+alias cfont="setfont \$(ls /usr/share/kbd/consolefonts | cut -d . -f1 | fzf)"
+
+# alias conda='/opt/miniconda3/bin/conda'
+alias cona='conda activate'
+alias cond='conda deactivate'
+
+
+ma() { # show all mailboxes that have mail in them
+    for m in ~/var/mail/rpgrenade/inbox ~/var/mail/ellisadigvom/inbox ~/var/mail/teknik/INBOX; do
+	if [[ "$(ls -A $m/new && ls -A $m/cur)" ]]; then
+	    mail -f $m;
+	fi
+    done
+}
+
+proxy-on() {
+    export HTTP_PROXY=http://test1:123456789@192.168.1.3:8080
+    export http_proxy=http://test1:123456789@192.168.1.3:8080
+    export HTTPS_PROXY=https://test1:123456789@192.168.1.3:8080
+}
+
+proxy-off() {
+    export HTTP_PROXY=
+    export http_proxy=
+    export HTTPS_PROXY=
+}
+
+
+watchdir() {
+    WATCH_DIR=$1
+    shift 1
+    while sleep 1; do
+	find $WATCH_DIR ! -name ".*" | entr -r -d -- zsh -c "$*"
+    done
+}
+
+cd() {
+    builtin cd $@ && ll
+}
+
+function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
+
+list-commands() {
+    pacman -Ql $@ | grep bin
+}
+
+emacs-sm() {
+    killall emacs &> /dev/null
+    pushd ~/etc &> /dev/null
+    stow -D emacs
+    stow spacemacs
+    pushd ~ &> /dev/null
+    emacs --daemon
+    popd &> /dev/null
+    popd &> /dev/null
+}
+
+emacs-mine() {
+    killall -9 emacs &> /dev/null
+    pushd ~/etc &> /dev/null
+    stow -D spacemacs
+    stow emacs
+    pushd ~ &> /dev/null
+    emacs --daemon
+    popd  &> /dev/null
+    popd &> /dev/null
+}
