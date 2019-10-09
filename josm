@@ -1,0 +1,2 @@
+#!/bin/sh
+`grep '^Exec'  /usr/share/applications/josm_latest.desktop  | tail -1 | sed 's/^Exec=//' | sed 's/%.//'` &
