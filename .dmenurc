@@ -1,0 +1,1 @@
+DMENU="dmenu -i -fn -*-terminus-medium-r-*-*-16-*-*-*-*-*-*-* -nb #3F3F3F -nf #DCDCCC -sb #1E2320 -sf #F0DFAF"
